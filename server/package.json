@@ -1,0 +1,30 @@
+{
+  "name": "fissure-server",
+  "bin" : { "fissure" : "./../cli.js"},
+  "private": true,
+  "version": "1.0.0",
+  "description": "Server: Platform for splitting expenses with friends",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MapTo0/fissure.git"
+  },
+  "contributors": [{
+      "name": "Martin Hristov",
+      "email": "martin.r.hristov@gmail.com"
+    },
+    {
+      "name": "Stanislav Stoynov",
+      "email": "stanislav.stoynov@gmail.com",
+      "url": "http://stoynov.me/"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MapTo0/fissure/issues"
+  },
+  "homepage": "https://github.com/MapTo0/fissure#readme"
+}
