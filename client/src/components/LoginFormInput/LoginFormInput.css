@@ -1,0 +1,33 @@
+.input-div-wrapper {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.input-wrapper {
+    margin-left: 24px;
+    padding-top: 20px;
+    width: calc(100% - 40px);
+}
+
+.input-inner {
+    padding: 10px 15px;
+    border: none;
+    border-bottom: 1px solid #e6dada;
+    width: calc(100% - 30px);
+    outline: none;
+    transition: 0.5s;
+    font-size: 14px;
+}
+
+.input-inner:active,
+.input-inner:focus {
+    border-bottom-color: #1196ea;
+}
+
+.icon {
+    align-self: center;
+}
+
+.hidden {
+    display: none;
+}

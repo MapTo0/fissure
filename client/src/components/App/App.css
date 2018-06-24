@@ -1,0 +1,14 @@
+html, body, #root, .App {
+  height: 100%;
+}
+
+.App {
+    height: 100%;
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#root {
+  background-color: #F5F6F6;
+}

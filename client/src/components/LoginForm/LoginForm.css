@@ -1,0 +1,34 @@
+.login-form {
+    width: calc(100% - 100px);
+    padding: 45px 50px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,.1);
+}
+
+.login-form-title {
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.login-form-link {
+    padding-top: 16px;
+    cursor: pointer;
+    display: inline-block;
+    color: #1196ea;
+    font-size: 14px;
+}
+
+.login-form-content-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form-footer .login-form-link {
+    margin-left: 10px;
+}
+
+.login-form-footer > span {
+    color: #909090;
+    font-size: 14px;
+}
