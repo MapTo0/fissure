@@ -1,5 +1,6 @@
 import User from './../models/user/UserModel'
 import Activity from './../models/activity/ActivityModel'
+import Bill from './../models/bill/BillModel'
 import helper from './../utils/helpers'
 
 const UserException = (code, message) => {
@@ -91,7 +92,7 @@ const createUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   try {
-    let user = await User.findById(req.params.uuid)
+    let user = await User.findById(req.user._id)
     if (!user) {
       throw new UserException(300, 'User does not exit')
     }
@@ -160,10 +161,58 @@ const uploadAvatar = async (req, res, next) => {
   }
 }
 
+const getStats = async (req, res, next) => {
+  try {
+    let billsByPeriod = await Bill.aggregate([
+      {
+        $match: {
+          userId: req.user._id
+        }
+      },
+      {
+        $group: {
+          _id: {day: {$dayOfYear: '$createdAt'}, year: {$year: '$createdAt'}},
+          totalAmount: {$sum: '$cost'},
+          count: {$sum: 1}
+        }
+      }
+    ])
+
+    let billByCategory = await Bill.aggregate([
+      {
+        $match: {
+          userId: req.user._id
+        }
+      },
+      {
+        $group: {
+          _id: {
+            day: {$dayOfYear: '$createdAt'},
+            year: {$year: '$createdAt'},
+            category: {id: '$categoryId'}
+          },
+          totalAmount: {$sum: '$cost'},
+          count: {$sum: 1}
+        }
+      }
+    ])
+
+    res.status(200).send(
+      helper.response({
+        stats1: {data: billByCategory, def: 'bills by period'},
+        stats2: {data: billsByPeriod, def: 'get by category'}
+      })
+    )
+  } catch (e) {
+    next(e)
+  }
+}
+
 export default {
   getUser,
   createUser,
   updateUser,
   uploadAvatar,
-  deactivateProfile
+  deactivateProfile,
+  getStats
 }

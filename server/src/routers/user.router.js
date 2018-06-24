@@ -4,8 +4,9 @@ import UserHandler from './../handlers/UsersHandler'
 const userRouter = Router()
 
 userRouter.get('/profile', UserHandler.getUser)
+userRouter.get('/dashboard', UserHandler.getStats)
+userRouter.get('/deactivate', UserHandler.deactivateProfile)
 userRouter.get('/:uuid', UserHandler.getUser)
-userRouter.put('/:uuid', UserHandler.updateUser)
-userRouter.get('/:uuid/deactivate', UserHandler.deactivateProfile)
+userRouter.put('/', UserHandler.updateUser)
 
 export default userRouter

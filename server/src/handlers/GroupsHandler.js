@@ -175,7 +175,8 @@ const addMemberToGroup = (req, res, next) => {
           userId: req.user._id,
           friends: {$in: [friend]}
         })
-        if (!friendlist.length) {
+
+        if (!friendlist) {
           return res
             .status(200)
             .send(
