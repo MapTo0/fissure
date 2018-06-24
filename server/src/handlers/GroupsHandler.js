@@ -4,15 +4,17 @@ import Friend from '../models/friend/FriendModel'
 
 const getGroups = async (req, res, next) => {
   try {
-    // Replace it
-    let {userId} = req.params
+    let groups = await Group.find({userId: req.user._id})
 
-    let groups = await Group.find({})
+    if (!groups) {
+      return res.status(200).send(helper.response('', 200, true, ['Missing data']))
+    }
+    console.log(req.user._id)
     res
       .status(200)
       .send(
         helper.response(
-          helper.serialize('groups', ['name', 'type', 'friends'], groups)
+          helper.serialize('groups', ['name', 'type', 'friends', 'userId'], groups)
         )
       )
   } catch (e) {
@@ -35,8 +37,8 @@ const createGroup = async (req, res, next) => {
       return res.status(422).send(helper.response('', 422, true, errors))
     }
 
-    let {name, type, userId} = req.body
-    await Group.find({name: name, userId: userId}, async (err, item) => {
+    let {name, type} = req.body
+    await Group.find({name: name, userId: req.user._id}, async (err, item) => {
       if (err) {
         return res.status(400).send(helper.response([]))
       }
@@ -48,7 +50,7 @@ const createGroup = async (req, res, next) => {
       }
 
       if (item.length === 0) {
-        let group = new Group({name: name, type: type, userId: userId})
+        let group = new Group({name: name, type: type, userId: req.user._id})
         group = await group.save()
         return res
           .status(200)
@@ -65,7 +67,7 @@ const createGroup = async (req, res, next) => {
 const updateGroup = (req, res, next) => {
   try {
     let {groupId} = req.params
-    Group.findOne({_id: groupId}, async (err, item) => {
+    Group.findOne({_id: groupId, userId: req.user._id}, async (err, item) => {
       if (err) {
         return next(err)
       }
@@ -103,7 +105,7 @@ const updateGroup = (req, res, next) => {
 const findGroup = (req, res, next) => {
   try {
     let {groupId} = req.params
-    Group.findOne({_id: groupId}, (err, item) => {
+    Group.findOne({_id: groupId, userId: req.user._id}, (err, item) => {
       if (err) {
         next(err)
       }
@@ -131,8 +133,8 @@ const findGroup = (req, res, next) => {
 
 const addMemberToGroup = (req, res, next) => {
   try {
-    let {groupId, userId} = req.body
-    Group.findOne({id: groupId}, async (err, item) => {
+    let {groupId} = req.body
+    Group.findOne({id: groupId, userId: req.user._id}, async (err, item) => {
       if (err) {
         return res.status(400).send(helper.response([], 400, true, [err]))
       }
@@ -146,7 +148,7 @@ const addMemberToGroup = (req, res, next) => {
           return res.status(422).send(helper.response('', 422, true, errors))
         }
 
-        let friendlist = await Friend.find({userId: userId, friends: {$in: [friend]}})
+        let friendlist = await Friend.find({userId: req.user._id, friends: {$in: [friend]}})
         if (!friendlist.length) {
           return res.status(200).send(helper.response([], 200, true, ['Missing friend from your friend list']))
         }
@@ -154,6 +156,7 @@ const addMemberToGroup = (req, res, next) => {
         let friends = item.friends
         if (friends.indexOf(friend) < 0) {
           item.friends.push(friend)
+          item.userId = req.user._id
           item = await item.save()
           return res.status(200).send(helper.response(item))
         }
@@ -170,8 +173,8 @@ const addMemberToGroup = (req, res, next) => {
 
 const removeMembersToGroup = (req, res, next) => {
   try {
-    let {groupId, userId} = req.body
-    Group.findOne({id: groupId}, async (err, item) => {
+    let {groupId} = req.body
+    Group.findOne({id: groupId, userId: req.user._id}, async (err, item) => {
       if (err) {
         return res.status(400).send(helper.response([], 400, true, [err]))
       }
@@ -185,7 +188,7 @@ const removeMembersToGroup = (req, res, next) => {
           return res.status(422).send(helper.response('', 422, true, errors))
         }
 
-        let friendlist = await Friend.find({userId: userId, friends: {$in: friends}})
+        let friendlist = await Friend.find({userId: req.user._id, friends: {$in: friends}})
         if (!friendlist.length) {
           return res.status(200).send(helper.response([], 200, true, ['Missing friend from your friend list']))
         }

@@ -6,17 +6,45 @@ import userRouter from './user.router'
 import groupRouter from './group.router'
 import friendRouter from './friend.router'
 import billRouter from './bill.router'
+import activityRouter from './activity.router'
+import passport from 'passport'
+import './../middlewares/auth'
 
 const globalRouter = Router()
 
 export default app => {
   globalRouter.use('/', apiRouter)
-  globalRouter.use('/users', userRouter)
   globalRouter.use('/auth', authRouter)
-  globalRouter.use('/categories', catRouter)
-  globalRouter.use('/groups', groupRouter)
-  globalRouter.use('/friends', friendRouter)
-  globalRouter.use('/bills', billRouter)
+  globalRouter.use(
+    '/users',
+    passport.authenticate('jwt', {session: false}),
+    userRouter
+  )
+  globalRouter.use(
+    '/categories',
+    passport.authenticate('jwt', {session: false}),
+    catRouter
+  )
+  globalRouter.use(
+    '/groups',
+    passport.authenticate('jwt', {session: false}),
+    groupRouter
+  )
+  globalRouter.use(
+    '/friends',
+    passport.authenticate('jwt', {session: false}),
+    friendRouter
+  )
+  globalRouter.use(
+    '/bills',
+    passport.authenticate('jwt', {session: false}),
+    billRouter
+  )
+  globalRouter.use(
+    '/activities',
+    passport.authenticate('jwt', {session: false}),
+    activityRouter
+  )
 
   app.use('/api/v1', globalRouter)
 }

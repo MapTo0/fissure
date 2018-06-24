@@ -11,13 +11,13 @@ const FriendException = (code, message) => {
 
 const addFriendToUserFriendList = async (req, res, next) => {
   try {
-    let {userId, friend} = req.body
-    let item = await Friend.findOne({user: userId}, (err, item) => {
+    let {friend} = req.body
+    let item = await Friend.findOne({user: req.user._id}, (err, item) => {
       if (err) {
         return res.status(400).send(helper.response([], 400, true, [err]))
       }
       if (!item) {
-        let item = new Friend({user: userId, friends: [friend]})
+        let item = new Friend({user: req.user._id, friends: [friend]})
         item = item.save()
         return res.status(200).send(helper.response(item))
       }
@@ -42,8 +42,8 @@ const addFriendToUserFriendList = async (req, res, next) => {
 
 const removeFriendToUserFriendList = async (req, res, next) => {
   try {
-    let {userId, friend} = req.params
-    let item = await Friend.findOne({user: userId}, (err, item) => {
+    let {friend} = req.params
+    let item = await Friend.findOne({user: req.user._id}, (err, item) => {
       if (err) {
         return res.status(400).send(helper.response([], 400, true, [err]))
       }
@@ -78,9 +78,7 @@ const searchFriendByName = async (req, res, next) => {
 
 const getFriendListByUser = async (req, res, next) => {
   try {
-    let {userId} = req.params
-
-    let item = await Friend.findOne({user: userId})
+    let item = await Friend.findOne({user: req.user._id})
       .populate('friends', '-password')
       .populate('user', '-password')
 

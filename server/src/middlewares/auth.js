@@ -1,30 +1,11 @@
-// /**
-//  * @param  {Passport.Passport} passport
-//  */
-// export default (passport) => {
-//   return (req, res, next) => {
-//     return passport.authenticate('jwt', {session: false})(req, res, next)
-//   }
-// }
-
-// import {use} from 'passport'
-// import {ExtractJwt, Strategy} from 'passport-jwt'
-// import {Strategy as LocalStrategy} from 'passport-local'
-// import User from './../models/user/UserModel'
-// import {APPSECRET} from './../../config/auth'
-// const ExtractJWT = ExtractJwt
-
-// const JWTStrategy = Strategy
-
 import User from './../models/user/UserModel'
 import passport from 'passport'
 import {Strategy as LocalStrategy} from 'passport-local'
-import {ExtractJwt, Strategy} from 'passport-jwt'
 import {APPSECRET} from './../../config/auth'
-import jwt from 'jsonwebtoken'
 
-const ExtractJWT = ExtractJwt
-const JWTStrategy = Strategy
+import {Strategy as _Strategy, ExtractJwt as _ExtractJwt} from 'passport-jwt'
+const JWTStrategy = _Strategy
+const ExtractJWT = _ExtractJwt
 
 passport.use(
   'local',
@@ -38,12 +19,11 @@ passport.use(
         if (!user) {
           return callback(null, false, {message: 'Incorrect email'})
         }
-
         user
           .verifyPassword(password)
           .then(valid => {
             if (valid) {
-              return callback(null, false, {message: 'Logged In Successfully'})
+              return callback(null, user, {message: 'Logged In Successfully'})
             } else {
               return callback(null, false, {message: 'Invalid'})
             }
@@ -63,7 +43,7 @@ passport.use(
       secretOrKey: APPSECRET
     },
     (jwtPayload, callback) => {
-      return User.findOne(jwtPayload.id, '-password')
+      return User.findById(jwtPayload.id, '-password')
         .then(user => {
           return callback(null, user)
         })

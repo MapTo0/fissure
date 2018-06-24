@@ -1,6 +1,4 @@
-export default (env) => {
-  return {
-    secret: 'super secret passphrase',
-    port: 3000
-  }
-}
+import dotenv from 'dotenv'
+dotenv.config()
+
+export const APPENV = process.env.APP_ENV

@@ -1,5 +1,6 @@
 import {Router} from 'express'
 import UserHandler from './../handlers/UsersHandler'
+
 const userRouter = Router()
 
 userRouter.get('/profile', UserHandler.getUser)

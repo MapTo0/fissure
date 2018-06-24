@@ -3,6 +3,7 @@ import helmet from 'helmet'
 import {urlencoded, json} from 'body-parser'
 import cors from 'cors'
 import validator from 'express-validator'
+import passport from 'passport'
 import morgan from 'morgan'
 import {serve, setup} from 'swagger-ui-express'
 import swaggerDocument from './../docs/api/v1.json'
@@ -15,6 +16,9 @@ app.use(helmet())
 app.use(cors())
 db({username: '', passpowor: ''})
 
+app.use(passport.initialize())
+app.use(passport.session())
+
 // uploadDir: '/tmp/uploads'
 app.use(urlencoded({extended: true}))
 app.use(json())
@@ -24,7 +28,7 @@ app.use(
       inArray: (value, options) => {
         return options.filter(item => item === value).length > 0
       },
-      notEmpty: (array) => {
+      notEmpty: array => {
         return array && array.length > 0
       }
     }

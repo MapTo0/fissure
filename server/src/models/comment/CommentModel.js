@@ -2,9 +2,13 @@ import mongoose, {Schema} from 'mongoose'
 import timestamps from 'mongoose-timestamp'
 
 const CommentSchema = new Schema({
-  user: {
+  userId: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  message: {
+    type: String,
+    required: 'Enter comment'
   }
 })
 

@@ -51,6 +51,8 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
+    req.session = null
+    req.logout()
     res.status(200).send(helper.response([]))
   } catch (e) {
     next(e)

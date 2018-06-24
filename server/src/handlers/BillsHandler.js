@@ -19,8 +19,7 @@ const fields = [
 
 const getBills = async (req, res, next) => {
   try {
-    const q = {}
-    let bills = await Bill.find(q)
+    let bills = await Bill.find({userId: req.user._id})
       .populate('userId', '-password')
       .populate('expenses')
       .populate({
@@ -55,7 +54,7 @@ const getBill = async (req, res, next) => {
       throw new Error('Missing billId')
     }
 
-    let bill = await Bill.findById(req.params.billId)
+    let bill = await Bill.findById({_id: req.params.billId, userId: req.user._id})
       .populate('userId', '-password')
       .populate('expenses')
       .populate({
@@ -91,7 +90,7 @@ const createBill = async (req, res, next) => {
     req.check('categoryId', 'category is required').notEmpty()
     req.check('paidBy', 'paied field is required').notEmpty()
 
-    let {userId} = req.body
+    let userId = req.user._id
 
     let errors = req.validationErrors()
     if (errors) {
@@ -253,7 +252,7 @@ const updateBill = async (req, res, next) => {
       expenses
     } = req.body
 
-    await Bill.findById(billId, async (err, bill) => {
+    await Bill.find({_id: billId, userId: req.user._id}, async (err, bill) => {
       if (err) {
         return res.status(400).send(helper.response([], 400, true, [err]))
       }
@@ -262,7 +261,7 @@ const updateBill = async (req, res, next) => {
         const updateExpense = (billId, userId, amount) => {
           Expense.findOne({billId: billId, userId: userId}, async (err, exp) => {
             if (err) {
-
+              return res.status(400).send(helper.response(err))
             }
 
             if (exp) {

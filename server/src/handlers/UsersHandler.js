@@ -49,8 +49,8 @@ const createUser = async (req, res, next) => {
     req.check('email', 'email is not valid').isEmail()
     req.check('password', 'password is required').notEmpty()
     req.check('password', 'password min 4 symbol').isLength({min: 4})
-    req.check('password', 'password is not equal').equals(req.body.confirmPassword)
-    req.check('username', 'username is required').notEmpty()
+    // req.check('password', 'password is not equal').equals(req.body.confirmPassword)
+    // req.check('username', 'username is required').notEmpty()
 
     let errors = req.validationErrors()
     if (errors) {
