@@ -1,5 +1,6 @@
 import User from './../models/user/UserModel'
 import Friend from './../models/friend/FriendModel'
+import Activity from './../models/activity/ActivityModel'
 import helper from './../utils/helpers'
 
 const FriendException = (code, message) => {
@@ -27,6 +28,15 @@ const addFriendToUserFriendList = async (req, res, next) => {
         if (friends.indexOf(friend) < 0) {
           item.friends.push(friend)
           item = item.save()
+
+          // Add log
+          let act = new Activity({
+            userId: req.user._id,
+            target: 'friend',
+            action: 'added'
+          })
+          act.save()
+
           return res.status(200).send(helper.response(item))
         }
 
@@ -51,6 +61,14 @@ const removeFriendToUserFriendList = async (req, res, next) => {
       if (item) {
         item.friends.pull({_id: friend})
         item.save()
+
+        // Add log
+        let act = new Activity({
+          userId: req.user._id,
+          target: 'friend',
+          action: 'removed'
+        })
+        act.save()
 
         return res.status(200).send(helper.response(item))
       }

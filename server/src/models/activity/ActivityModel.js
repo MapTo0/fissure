@@ -22,10 +22,11 @@ const ActivitySchema = new Schema({
   action: {
     type: String,
     enum: [
-      'create',
-      'update',
-      'delete',
-      'add'
+      'created',
+      'updated',
+      'deleted',
+      'added',
+      'removed'
     ],
     default: 'create'
   }

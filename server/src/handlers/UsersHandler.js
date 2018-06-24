@@ -1,4 +1,5 @@
 import User from './../models/user/UserModel'
+import Activity from './../models/activity/ActivityModel'
 import helper from './../utils/helpers'
 
 const UserException = (code, message) => {
@@ -72,6 +73,14 @@ const createUser = async (req, res, next) => {
     let user = new User(data)
     user = await user.save()
 
+    // Add log
+    let act = new Activity({
+      userId: user._id,
+      target: 'user',
+      action: 'created'
+    })
+    act.save()
+
     res
       .status(200)
       .send(helper.response(helper.serialize('users', fields, user)))
@@ -108,6 +117,14 @@ const updateUser = async (req, res, next) => {
     user.avatar = avatar || user.avatar
 
     user = await user.save()
+
+    // Add log
+    let act = new Activity({
+      userId: user._id,
+      target: 'user',
+      action: 'updated'
+    })
+    act.save()
 
     res
       .status(200)

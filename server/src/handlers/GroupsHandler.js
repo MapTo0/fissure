@@ -1,20 +1,27 @@
 import Group from './../models/group/GroupModel'
 import helper from './../utils/helpers'
 import Friend from '../models/friend/FriendModel'
+import Activity from '../models/activity/ActivityModel'
 
 const getGroups = async (req, res, next) => {
   try {
     let groups = await Group.find({userId: req.user._id})
 
     if (!groups) {
-      return res.status(200).send(helper.response('', 200, true, ['Missing data']))
+      return res
+        .status(200)
+        .send(helper.response('', 200, true, ['Missing data']))
     }
     console.log(req.user._id)
     res
       .status(200)
       .send(
         helper.response(
-          helper.serialize('groups', ['name', 'type', 'friends', 'userId'], groups)
+          helper.serialize(
+            'groups',
+            ['name', 'type', 'friends', 'userId'],
+            groups
+          )
         )
       )
   } catch (e) {
@@ -52,6 +59,14 @@ const createGroup = async (req, res, next) => {
       if (item.length === 0) {
         let group = new Group({name: name, type: type, userId: req.user._id})
         group = await group.save()
+        // Add log
+        let act = new Activity({
+          userId: req.user._id,
+          target: 'group',
+          action: 'created'
+        })
+        act.save()
+
         return res
           .status(200)
           .send(
@@ -78,6 +93,14 @@ const updateGroup = (req, res, next) => {
         item.type = type || item.type
         try {
           item = await item.save()
+
+          // Add log
+          let act = new Activity({
+            userId: req.user._id,
+            target: 'group',
+            action: 'updated'
+          })
+          act.save()
         } catch (e) {
           return next(e)
         }
@@ -148,9 +171,18 @@ const addMemberToGroup = (req, res, next) => {
           return res.status(422).send(helper.response('', 422, true, errors))
         }
 
-        let friendlist = await Friend.find({userId: req.user._id, friends: {$in: [friend]}})
+        let friendlist = await Friend.find({
+          userId: req.user._id,
+          friends: {$in: [friend]}
+        })
         if (!friendlist.length) {
-          return res.status(200).send(helper.response([], 200, true, ['Missing friend from your friend list']))
+          return res
+            .status(200)
+            .send(
+              helper.response([], 200, true, [
+                'Missing friend from your friend list'
+              ])
+            )
         }
 
         let friends = item.friends
@@ -158,6 +190,14 @@ const addMemberToGroup = (req, res, next) => {
           item.friends.push(friend)
           item.userId = req.user._id
           item = await item.save()
+          // Add log
+          let act = new Activity({
+            userId: req.user._id,
+            target: 'group',
+            action: 'added'
+          })
+          act.save()
+
           return res.status(200).send(helper.response(item))
         }
 
@@ -188,9 +228,18 @@ const removeMembersToGroup = (req, res, next) => {
           return res.status(422).send(helper.response('', 422, true, errors))
         }
 
-        let friendlist = await Friend.find({userId: req.user._id, friends: {$in: friends}})
+        let friendlist = await Friend.find({
+          userId: req.user._id,
+          friends: {$in: friends}
+        })
         if (!friendlist.length) {
-          return res.status(200).send(helper.response([], 200, true, ['Missing friend from your friend list']))
+          return res
+            .status(200)
+            .send(
+              helper.response([], 200, true, [
+                'Missing friend from your friend list'
+              ])
+            )
         }
 
         friends.forEach(friend => {
@@ -200,6 +249,15 @@ const removeMembersToGroup = (req, res, next) => {
         })
 
         item = await item.save()
+
+        // Add log
+        let act = new Activity({
+          userId: req.user._id,
+          target: 'group',
+          action: 'removed'
+        })
+        act.save()
+
         return res.status(200).send(helper.response(item))
       }
     })

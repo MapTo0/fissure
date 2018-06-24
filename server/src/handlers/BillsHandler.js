@@ -1,6 +1,7 @@
 import Bill from './../models/bill/BillModel'
 import Expense from './../models/payment/ExpenseModel'
 import Friend from './../models/friend/FriendModel'
+import Activity from './../models/activity/ActivityModel'
 import Group from './../models/group/GroupModel'
 import helper from './../utils/helpers'
 import {Decimal} from 'decimal.js'
@@ -54,7 +55,10 @@ const getBill = async (req, res, next) => {
       throw new Error('Missing billId')
     }
 
-    let bill = await Bill.findById({_id: req.params.billId, userId: req.user._id})
+    let bill = await Bill.findById({
+      _id: req.params.billId,
+      userId: req.user._id
+    })
       .populate('userId', '-password')
       .populate('expenses')
       .populate({
@@ -164,6 +168,13 @@ const createBill = async (req, res, next) => {
 
     let bill = new Bill(data)
     bill = await bill.save()
+    // Add log
+    let act = new Activity({
+      userId: req.user._id,
+      target: 'bill',
+      action: 'created'
+    })
+    act.save()
 
     let total = new Decimal(0)
     if (bill && expenses) {
@@ -259,16 +270,19 @@ const updateBill = async (req, res, next) => {
 
       if (bill) {
         const updateExpense = (billId, userId, amount) => {
-          Expense.findOne({billId: billId, userId: userId}, async (err, exp) => {
-            if (err) {
-              return res.status(400).send(helper.response(err))
-            }
+          Expense.findOne(
+            {billId: billId, userId: userId},
+            async (err, exp) => {
+              if (err) {
+                return res.status(400).send(helper.response(err))
+              }
 
-            if (exp) {
-              exp.amount = amount || exp.amount
-              await exp.save()
+              if (exp) {
+                exp.amount = amount || exp.amount
+                await exp.save()
+              }
             }
-          })
+          )
         }
 
         const changeExpenses = async (billId, expenses, data) => {
@@ -282,7 +296,9 @@ const updateBill = async (req, res, next) => {
         }
 
         if (cost && cost !== bill.cost && !expenses) {
-          res.status(200).send(helper.response([], 200, false, ['Exponses are required']))
+          res
+            .status(200)
+            .send(helper.response([], 200, false, ['Exponses are required']))
         }
 
         bill.cost = cost ? Decimal(cost) : bill.cost
@@ -292,6 +308,14 @@ const updateBill = async (req, res, next) => {
         bill.paymenDate = paymenDate || bill.paymenDate
         bill.description = description || bill.description
         bill = await bill.save()
+
+        // Add log
+        let act = new Activity({
+          userId: req.user._id,
+          target: 'bill',
+          action: 'updated'
+        })
+        act.save()
         if (expenses) {
           changeExpenses(bill._id, bill.expenses, expenses)
         }
@@ -330,6 +354,14 @@ const deleteBill = async (req, res, next) => {
 
         bill.remove()
         detEx()
+
+        // Add log
+        let act = new Activity({
+          userId: req.user._id,
+          target: 'bill',
+          action: 'deleted'
+        })
+        act.save()
         res.status(200).send(helper.response(['Deleted']))
       }
 
