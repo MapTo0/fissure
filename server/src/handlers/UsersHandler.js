@@ -185,11 +185,22 @@ const getStats = async (req, res, next) => {
         }
       },
       {
+        $lookup: {
+          from: "categories",
+          localField: "category_group",
+          foreignField: "categoryId",
+          as: "category"
+        }
+      },
+      {
         $group: {
           _id: {
             day: {$dayOfYear: '$createdAt'},
             year: {$year: '$createdAt'},
-            category: {id: '$categoryId'}
+            // category: {id: '$categoryId'},
+            category: {
+              group: "$category.category_group"
+            }
           },
           totalAmount: {$sum: '$cost'},
           count: {$sum: 1}

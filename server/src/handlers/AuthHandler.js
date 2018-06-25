@@ -12,12 +12,16 @@ const login = async (req, res, next) => {
       })
     }
     passport.authenticate('local', {session: false}, (err, user, info) => {
-      if (err && !user) {
-        res.status(401).send({success: false, msg: 'Login Failed'})
-      } else {
+      if (err) {
+        return res.status(401).send({success: false, message: 'Login Failed'})
+      }
+      if (!user) {
+        return res.status(401).send({success: false, message: info.message})
+      }
+      if (user) {
         req.login(user, {session: false}, (err) => {
           if (err) {
-            res.status(401).send({success: false, msg: err})
+            return res.status(401).send({success: false, message: err})
           } else {
             var token = jwt.sign(
               {

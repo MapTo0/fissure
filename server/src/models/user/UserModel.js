@@ -7,9 +7,9 @@ const COUNTRIES = ['BG', 'UK']
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: true,
+    // required: false,
     max: [50, 'Username cannot be more than 50 characters long.'],
-    unique: true,
+    // unique: true,
     lowercase: true,
     trim: true,
     index: true

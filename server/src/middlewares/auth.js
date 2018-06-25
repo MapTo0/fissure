@@ -22,10 +22,11 @@ passport.use(
         user
           .verifyPassword(password)
           .then(valid => {
+            console.log(valid)
             if (valid) {
               return callback(null, user, {message: 'Logged In Successfully'})
             } else {
-              return callback(null, false, {message: 'Invalid'})
+              return callback(null, false, {message: 'Wrong email or password'})
             }
           })
           .catch(err => {
@@ -45,6 +46,7 @@ passport.use(
     (jwtPayload, callback) => {
       return User.findById(jwtPayload.id, '-password')
         .then(user => {
+
           return callback(null, user)
         })
         .catch(err => {
