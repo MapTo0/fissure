@@ -98,6 +98,14 @@ class DashboardMaster extends Component {
   showAddFriendModal() {
   }
 
+  handleAddFriend(email) {
+    // TODO - call service
+    this.setState({
+      ...this.state,
+      friends: [...this.state.friends, { text: email, id: Math.random() }]
+    })
+  }
+
   render() {
     return (
       <aside className="left-side-content">
@@ -140,7 +148,7 @@ class DashboardMaster extends Component {
           this.state.friends
         } collectionPath="friends" hideAdd={true} />
 
-        <InviteFriends />
+        <InviteFriends handleAddFriend={this.handleAddFriend.bind(this)}/>
 
         <Modal
           isOpen={this.state.isAddGroupModalOpen}

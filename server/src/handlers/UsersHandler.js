@@ -67,15 +67,12 @@ const createUser = async (req, res, next) => {
       firstname: firstname,
       lastname: lastname,
       email: email,
-      password: password,
-      username: firstname
+      password: password
     }
     
     let user = new User(data)
-    console.log('save ..............')
     user = await user.save()
     
-    console.log('after save ..............')
     // Add log
     let act = new Activity({
       userId: user._id,

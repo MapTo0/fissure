@@ -28,13 +28,13 @@ class LoginForm extends Component {
     this.handleShowSignup = this.handleShowSignup.bind(this);
     this.emailField = React.createRef();
     this.passwordField = React.createRef();
-    this.usernameField = React.createRef();
+    this.firstnameField = React.createRef();
+    this.lastnameField = React.createRef();
     this.handleSignup = this.handleSignup.bind(this);
     this.handleSignin = this.handleSignin.bind(this);
-
   }
 
-  postData(url, data) {
+  fetchData(method, url, data) {
     // Default options are marked with *
     return fetch(url, {
       body: JSON.stringify(data), // must match 'Content-Type' header
@@ -42,10 +42,8 @@ class LoginForm extends Component {
         'user-agent': 'Mozilla/4.0 MDN Example',
         'content-type': 'application/json'
       },
-      mode: 'cors',
-      redirect: 'follow', // manual, *follow, error
-      referrer: 'no-referrer', // *client, no-referrer
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, cors, *same-origin
     })
       .then(response => response.json()) // parses response to JSON
   }
@@ -53,17 +51,21 @@ class LoginForm extends Component {
   handleSignup(event) {
     const email = this.emailField.current.state.value;
     const password = this.passwordField.current.state.value;
-    const firstname = this.usernameField.current.state.value;
-    const lastname = this.usernameField.current.state.value;
+    const firstname = this.firstnameField.current.state.value;
+    const lastname = this.lastnameField.current.state.value;
 
-    this.postData('http://localhost:8080/api/v1/auth/register', { email, password, firstname, lastname })
+    this.fetchData('POST', 'http://localhost:8080/api/v1/auth/register', { email, password, firstname, lastname })
       .then(data => {
-        alert('Registration successful! You can now Sign in.');
-
-        this.setState({
-          ...this.state,
-          showRegisterField: false
-        });
+        if (data.messages.length > 0) {
+          alert('Recheck given credentials!');          
+        } else {
+          alert('Registration successful! You can now Sign in.');
+  
+          this.setState({
+            ...this.state,
+            showRegisterField: false
+          });
+        }
       })
       .catch(error => {
         alert('Recheck given credentials!');
@@ -75,10 +77,15 @@ class LoginForm extends Component {
     const password = this.passwordField.current.state.value;
     const that = this;
 
-    this.postData('http://localhost:8080/api/v1/auth/login', { email, password })
+    this.fetchData('POST', 'http://localhost:8080/api/v1/auth/login', { email, password })
       .then(data => {
-        window.localStorage["prosplitter-token"] = data.token;
-        that.props.history.push("/dashboard");
+
+        if (data.token) {
+          window.localStorage["prosplitter-token"] = data.token;
+          that.props.history.push("/dashboard");
+        } else {
+          alert('Recheck given credentials!');
+        }
       })
       .catch(error => {
         alert('Recheck given credentials!');
@@ -115,7 +122,8 @@ class LoginForm extends Component {
             />
 
             <LoginFormInput type="password" ref={this.passwordField} visible="true" icon={<PasswordIcon style={{ alignSelf: 'center', marginTop: '20px' }} />} placeholder='Password' />
-            <LoginFormInput type="text" ref={this.usernameField} visible={this.state.showRegisterField} icon={<AccountBox style={{ alignSelf: 'center', marginTop: '20px' }} />} placeholder='Username' />
+            <LoginFormInput type="text" ref={this.firstnameField} visible={this.state.showRegisterField} icon={<AccountBox style={{ alignSelf: 'center', marginTop: '20px' }} />} placeholder='First Name' />
+            <LoginFormInput type="text" ref={this.lastnameField} visible={this.state.showRegisterField} icon={<AccountBox style={{ alignSelf: 'center', marginTop: '20px' }} />} placeholder='Last Name' />
 
             <a src='#' className={'login-form-link ' + (this.state.showRegisterField ? 'hidden' : '')}>Forgot password?</a>
 

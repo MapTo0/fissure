@@ -3,6 +3,10 @@ import './All.css';
 import EventNote from 'material-ui-icons/EventNote';
 
 class All extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <div className="expense-container">
@@ -16,27 +20,30 @@ class All extends Component {
 
         <main className="expense-container-content">
           <ul className="unstyled-ul expenses-list">
-            <li className="expense-list-item flex">
-              <div className="expense-date-container flex column center-all">
-                <div classNme="expense-date-month">JUN</div>
-                <div className="expense-date-number">18</div>
-              </div>
-              <div className="expense-description-container">
-                <span className="expense-description">Quis excepteur aute.</span>
-                <span className="expense-group">Family</span>
-              </div>
-              <div className="owe-details flex">
-                <div className="paid-by owe-details-cell flex column">
-                  <span className="pay-person">Tereza C. paid</span>
-                  <span className="pay-amoubt">BGN 245.00</span>
-                </div>
 
-                <div className="borrowed-by owe-details-cell flex column">
-                  <span className="pay-person">Tereza lent you</span>
-                  <span className="pay-amoubt">BGN 1234.00</span>
+            {this.props.bills.map(expense => {
+              return (<li className="expense-list-item flex">
+                <div className="expense-date-container flex column center-all">
+                  <div classNme="expense-date-month">{expense.date}</div>
+                  <div className="expense-date-number">{expense.date}</div>
                 </div>
-              </div>
-            </li>
+                <div className="expense-description-container">
+                  <span className="expense-description">{expense.text}</span>
+                  <span className="expense-group">{expense.group}</span>
+                </div>
+                <div className="owe-details flex">
+                  <div className="paid-by owe-details-cell flex column">
+                    <span className="pay-person">{expense.paiedBy}</span>
+                    <span className="pay-amoubt">{expense.amount}</span>
+                  </div>
+
+                  <div className="borrowed-by owe-details-cell flex column">
+                    <span className="pay-person">{expense.paiedBy + "lent you"}</span>
+                    <span className="pay-amoubt">{expense.owe}</span>
+                  </div>
+                </div>
+              </li>)
+            })}
           </ul>
         </main>
       </div>

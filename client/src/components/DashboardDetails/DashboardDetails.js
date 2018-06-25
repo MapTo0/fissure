@@ -40,12 +40,41 @@ class DashboardDetails extends Component {
   }
 
   recordBill() {
-    // call service and update model
+    const exampleBill = {
+      description: "asdf",
+      cost: "123.22",
+      categoryId: "5b252fd3d8282fce558cca39",
+      memberId: "",
+      groupId: "5b263e50f54a5374687796d9",
+      paidBy: "asdfasdf",
+      note: "asdf",
+      paymenDate: Date.now(),
+      expenses: "asdf"
+    }
 
-    this.setState({
-      ...this.state,
-      modalIsOpen: false
-    });
+    this.fetchData('POST', 'http://localhost:8080/api/v1/bills', exampleBill)
+      .then(data => {
+
+        debugger;
+      })
+      .catch(error => {
+        debugger;
+      });
+  }
+  
+  fetchData(method, url, data) {
+    // Default options are marked with *
+    return fetch(url, {
+      body: JSON.stringify(data), // must match 'Content-Type' header
+      headers: {
+        'user-agent': 'Mozilla/4.0 MDN Example',
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${window.localStorage["prosplitter-token"]}`
+      },
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, cors, *same-origin
+    })
+      .then(response => response.json()) // parses response to JSON
   }
   
   render() {

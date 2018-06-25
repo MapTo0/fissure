@@ -11,7 +11,7 @@ class Header extends Component {
           <div className="dashboard-header-profile">
             <a href="#" className="unstyled-a">
               <AccountCircle />
-              <span className="dashboard-header-profile-name">Martin Hristov</span>
+              <span className="dashboard-header-profile-name">{this.props.user.name}</span>
             </a>
           </div>
         </div>
