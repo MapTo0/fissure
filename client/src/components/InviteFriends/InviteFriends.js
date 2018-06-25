@@ -6,10 +6,10 @@ class InviteFriends extends Component {
     return (
       <section className="invite-friends">
         <header className="invite-header">
-          <span class="invite-header-text">Invite Friends</span>
+          <span className="invite-header-text">Invite Friends</span>
         </header>
         <div className="invite-content">
-          <input />
+          <input type="email" />
           <button className="invite-btn" >Send invite</button>
         </div>
       </section>

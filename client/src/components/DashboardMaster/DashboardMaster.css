@@ -60,3 +60,11 @@
 .all-activities {
     margin-top: 16px;
 }
+
+.add-bill-modal-footer.borderless {
+    border-top: none;
+}
+
+.add-bill-modal-info.equal-padding {
+    padding: 16px;
+}

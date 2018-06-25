@@ -119,3 +119,87 @@
 .owed {
     font-size: 0.8rem;
 }
+
+.add-bill-modal-header {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #60C4A7;
+    align-items: center;
+    padding: 0 16px;
+}
+
+.add-bill-modal-title {
+    color: white;
+    font-weight: bold;  
+}
+
+.add-bill-modal-close-btn {
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+}
+
+.add-bill-modal-person input {
+    flex-grow: 1;
+    margin-left: 8px;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding-left: 4px;
+    font-size: 1rem;
+}
+
+.add-bill-modal-person {
+    display: flex;
+    height: 36px;
+    align-items: center;
+    padding: 4px 16px;
+    border-bottom: 1px solid #dadada;
+}
+
+.add-bill-modal-info {
+    display: flex;
+    flex-direction: column;
+    padding: 4px 16px;
+}
+
+.add-bill-modal-input {
+    margin-top: 16px;
+    border: none;
+    font-size: 1rem;
+    border-bottom: 1px dashed #6666;
+    padding: 8px;
+    outline: none;
+}
+
+.add-bill-modal-footer {
+    height: 54px;
+    margin-top: 16px;
+    border-top: 1px solid #666666;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 16px;
+}
+
+.add-bill-modal-footer-btn {
+    height: 80%;
+    border-radius: 5px;
+    width: 60px;
+    outline: none;
+    border: 1px solid teal;
+    cursor: pointer;
+}
+
+.teal-btn {
+    background-color: #318970;
+    color: white;
+}
+
+.left-btn {
+    margin-right: 12px;
+}
