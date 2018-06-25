@@ -24,7 +24,7 @@ class LoginFormInput extends Component {
       <div className={'input-div-wrapper' + (this.props.visible ? '' : ' hidden') }>
         {this.props.icon}
         <div className='input-wrapper'>
-          <input className='input-inner' onChange={this.onLiveChange.bind(this)} placeholder={this.props.placeholder}/>
+          <input className='input-inner' type={this.props.type} onChange={this.onLiveChange.bind(this)} placeholder={this.props.placeholder}/>
         </div>
      </div>
     );
