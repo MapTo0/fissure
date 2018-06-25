@@ -199,8 +199,8 @@ const getStats = async (req, res, next) => {
 
     res.status(200).send(
       helper.response({
-        stats1: {data: billByCategory, def: 'bills by period'},
-        stats2: {data: billsByPeriod, def: 'get by category'}
+        // stats1: {data: billsByPeriod, def: 'bills by period'},
+        stats2: {data: billByCategory, def: 'get by category'}
       })
     )
   } catch (e) {

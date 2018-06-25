@@ -14,7 +14,10 @@ const ExpenseSchema = new Schema({
   },
   amount: {
     type: Schema.Types.Decimal128,
-    required: true
+    required: true,
+    get: (value) => {
+      return value.toString()
+    }
   },
   active: {
     type: Boolean,

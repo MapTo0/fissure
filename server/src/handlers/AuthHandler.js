@@ -1,16 +1,8 @@
-import User from './../models/user/UserModel'
 import helper from './../utils/helpers'
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
 import './../middlewares/auth'
 import {APPSECRET} from './../../config/auth'
-
-const AuthException = (code, message) => {
-  return {
-    code: code,
-    message: message
-  }
-}
 
 const login = async (req, res, next) => {
   try {

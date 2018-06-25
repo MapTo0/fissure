@@ -3,17 +3,10 @@ import Friend from './../models/friend/FriendModel'
 import Activity from './../models/activity/ActivityModel'
 import helper from './../utils/helpers'
 
-const FriendException = (code, message) => {
-  return {
-    code: code,
-    message: message
-  }
-}
-
 const addFriendToUserFriendList = async (req, res, next) => {
   try {
     let {friend} = req.body
-    let item = await Friend.findOne({user: req.user._id}, (err, item) => {
+    await Friend.findOne({user: req.user._id}, (err, item) => {
       if (err) {
         return res.status(400).send(helper.response([], 400, true, [err]))
       }
@@ -53,7 +46,7 @@ const addFriendToUserFriendList = async (req, res, next) => {
 const removeFriendToUserFriendList = async (req, res, next) => {
   try {
     let {friend} = req.params
-    let item = await Friend.findOne({user: req.user._id}, (err, item) => {
+    await Friend.findOne({user: req.user._id}, (err, item) => {
       if (err) {
         return res.status(400).send(helper.response([], 400, true, [err]))
       }

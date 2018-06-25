@@ -9,7 +9,10 @@ const BillSchema = new Schema({
   },
   cost: {
     type: Schema.Types.Decimal128,
-    required: true
+    required: true,
+    get: (value) => {
+      return value.toString()
+    }
   },
   userId: {
     type: Schema.ObjectId,
