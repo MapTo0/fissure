@@ -24,7 +24,7 @@ const fields = [
 
 const getUser = async (req, res, next) => {
   try {
-    let user = await User.findById(req.params.uuid)
+    let user = await User.findById(req.user._id)
 
     if (!user) {
       throw new UserException(300, 'User does not exit')
@@ -186,10 +186,10 @@ const getStats = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "categories",
-          localField: "category_group",
-          foreignField: "categoryId",
-          as: "category"
+          from: 'categories',
+          localField: 'category_group',
+          foreignField: 'categoryId',
+          as: 'category'
         }
       },
       {
@@ -197,10 +197,7 @@ const getStats = async (req, res, next) => {
           _id: {
             day: {$dayOfYear: '$createdAt'},
             year: {$year: '$createdAt'},
-            // category: {id: '$categoryId'},
-            category: {
-              group: "$category.category_group"
-            }
+            category: {id: '$categoryId'}
           },
           totalAmount: {$sum: '$cost'},
           count: {$sum: 1}
