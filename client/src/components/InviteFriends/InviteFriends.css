@@ -1,0 +1,28 @@
+.invite-friends {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid grey;
+}
+
+.invite-header {
+    background-color: #63C3A7;
+    color: white;
+    padding: 4px;
+}
+
+.invite-content {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.invite-btn {
+    margin-top: 16px;
+}
+
+.invite-content input {
+    outline: none;
+    padding: 4px;
+}

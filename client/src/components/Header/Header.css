@@ -1,0 +1,49 @@
+.dashboard-header {
+    display: flex;
+    width: calc(100% + 60px);
+    left: 0;
+    height: 40px;
+    background-color: #5FC4A7;
+    position: relative;
+    left: -40px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+.dashboard-header-content {
+    width: 100%;
+    padding: 0 80px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.dashboard-header-title {
+    margin: 0;
+    font-weight: normal;
+    color: white;
+    font-family: fantasy;
+}
+
+.dashboard-header-profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+}
+
+.dashboard-header-profile:hover {
+    background-color: #48be9d;
+}
+
+.dashboard-header-profile-name {
+    margin-left: 10px;
+}
+
+.unstyled-a {
+    font-style: normal;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -24,7 +24,7 @@ const fields = [
 
 const getUser = async (req, res, next) => {
   try {
-    let user = await User.findById(req.params.uuid)
+    let user = await User.findById(req.user._id)
 
     if (!user) {
       throw new UserException(300, 'User does not exit')
@@ -67,19 +67,19 @@ const createUser = async (req, res, next) => {
       firstname: firstname,
       lastname: lastname,
       email: email,
-      password: password,
-      username: username
+      password: password
     }
-
+    
     let user = new User(data)
     user = await user.save()
-
+    
     // Add log
     let act = new Activity({
       userId: user._id,
       target: 'user',
       action: 'created'
     })
+    
     act.save()
 
     res
@@ -182,6 +182,14 @@ const getStats = async (req, res, next) => {
       {
         $match: {
           userId: req.user._id
+        }
+      },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'category_group',
+          foreignField: 'categoryId',
+          as: 'category'
         }
       },
       {

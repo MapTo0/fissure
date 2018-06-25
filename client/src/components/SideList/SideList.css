@@ -1,0 +1,30 @@
+.side-list {
+    margin-top: 16px;
+}
+
+.side-list-header {
+    background-color: #EEEEEE;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 20px;
+}
+
+.side-list-content {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.side-listitem {
+    margin-top: 4px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    color: #666666;
+}
+
+.greys {
+    color: #666666;
+    margin-left: 8px;
+}

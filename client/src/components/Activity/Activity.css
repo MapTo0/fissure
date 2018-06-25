@@ -1,0 +1,36 @@
+.activity-list {
+    margin: 0;
+    padding: 0;
+}
+
+.activity-info {
+    margin-left: 8px;
+}
+
+.activity-header {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    background-color: #EEEEEE;
+}
+
+.activity-header h2 {
+    margin: 0;
+}
+
+.activity {
+    width: 100%;
+}
+
+.activity-content {
+    padding: 12px;
+}
+
+.activity-date {
+    font-size: 0.8rem;
+}
+
+.activity-item {
+    padding: 12px;
+    border-bottom: 1px solid grey;
+}

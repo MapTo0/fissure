@@ -43,6 +43,63 @@ const addFriendToUserFriendList = async (req, res, next) => {
   }
 }
 
+const addFriendToUserFriendListByEmail = async (req, res, next) => {
+  try {
+    let {email} = req.body
+    if (!email) {
+      return res.status(400).send(helper.response([], 400, true, ['Email is required']))
+    }
+    let fUser = await User.findOne({email: email})
+
+    if (!fUser) {
+      return res.status(400).send(helper.response([], 400, true, ['This user does not exist']))
+    }
+
+    await Friend.findOne({user: req.user._id}, async (err, item) => {
+      if (err) {
+        return res.status(400).send(helper.response([], 400, true, [err]))
+      }
+      if (!item) {
+        let item = new Friend({user: req.user._id, friends: [fUser._id]})
+        item = await item.save()
+        // Add log
+        let act = new Activity({
+          userId: req.user._id,
+          target: 'friend',
+          action: 'added'
+        })
+        act.save()
+
+        return res.status(200).send(helper.response(item))
+      }
+
+      if (item) {
+        let friends = item.friends
+        if (friends.indexOf(fUser._id) < 0) {
+          item.friends.push(fUser._id)
+          item = await item.save()
+
+          // Add log
+          let act = new Activity({
+            userId: req.user._id,
+            target: 'friend',
+            action: 'added'
+          })
+          act.save()
+
+          return res.status(200).send(helper.response(item))
+        }
+
+        if (friends.indexOf(fUser._id) >= 0) {
+          return res.status(200).send(helper.response([], 200, true, ['Exist']))
+        }
+      }
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 const removeFriendToUserFriendList = async (req, res, next) => {
   try {
     let {friend} = req.params
@@ -101,6 +158,7 @@ const getFriendListByUser = async (req, res, next) => {
 
 export default {
   addFriendToUserFriendList,
+  addFriendToUserFriendListByEmail,
   removeFriendToUserFriendList,
   searchFriendByName,
   getFriendListByUser
